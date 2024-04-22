@@ -4,7 +4,7 @@ public class Ficha {
     private int numFicha;
     private int posicion;//Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
     private int casillasRecorridas;
-    private colorEnum color;
+    public ColorEnum color;
     private boolean fuera;//Hace referencia ha esta afuera del principio 
     private boolean acabado;//Señale si la ficha ha llegado al final
 
@@ -13,7 +13,7 @@ public class Ficha {
     private static final int CASILLAS_RECORRER = 63;
     private static final int CASILLAS_FINAL = 8;
 
-    public Ficha(int numFicha, int posicion, int casillasRecorridas, colorEnum color) {
+    public Ficha(int numFicha, int posicion, int casillasRecorridas, ColorEnum color) {
         this.numFicha = numFicha;
         this.posicion = posicion;
         this.casillasRecorridas = casillasRecorridas;
@@ -31,7 +31,7 @@ public class Ficha {
     public int getCasillasRecorridas() {
         return CASILLAS_RECORRER -casillasRecorridas;
     }
-
+    /*
     public void moverFicha(int valorDado){
 
         if(casillasRecorridas < CASILLAS_RECORRER){
@@ -57,8 +57,8 @@ public class Ficha {
             }
         }
     }
-
-    public colorEnum getColor() {
+    */
+    public ColorEnum getColor() {
         return color;
     }
 

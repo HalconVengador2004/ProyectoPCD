@@ -10,16 +10,29 @@ package com.mycompany.proyectocliente_servidor;
  */
 public class Jugador {
     private Ficha[] fichas;
-    private colorEnum colorJugador;
+    private ColorEnum colorJugador;
+    private int  numeroFichasEnJuego;
 
-    public Jugador(Ficha[] fichas, colorEnum colorJugador) {
-        this.fichas = fichas;
+    public Jugador(ColorEnum colorJugador) {
         this.colorJugador = colorJugador;
+        this.numeroFichasEnJuego = 0;
     }
 
-    public colorEnum getColorJugador() {
+    public ColorEnum getColorJugador() {
         return colorJugador;
     }
+
+    public int getNumeroFichasEnJuego() {
+        return numeroFichasEnJuego;
+    }
+
+    public void setNumeroFichasEnJuego(int numeroFichasEnJuego) {
+        this.numeroFichasEnJuego = numeroFichasEnJuego;
+    }
+
+
+    
+    
     
 
 }

@@ -8,7 +8,7 @@ package com.mycompany.proyectocliente_servidor;
  *
  * @author alumno
  */
-public enum colorEnum {
+public enum ColorEnum {
     ROJO,
     VERDE,
     AMARILLO,
