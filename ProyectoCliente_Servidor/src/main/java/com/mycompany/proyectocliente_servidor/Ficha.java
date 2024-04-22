@@ -13,6 +13,7 @@ public class Ficha {
     private int posicion;
     private int casillasRecorridas;
     private colorEnum color;
+    private boolean fuera=false;//Hace referencia a si la ficha ha salido de casa o no
 
     private static boolean posFinal = false;
     private static int r = 0;
@@ -37,7 +38,12 @@ public class Ficha {
     public int getCasillasRecorridas() {
         return CASILLAS_RECORRER -casillasRecorridas;
     }
-
+    public void ponerFichaCasa(){
+        posicion=0;
+        casillasRecorridas=0;
+        fuera=false;
+        
+    }
 
 
     
