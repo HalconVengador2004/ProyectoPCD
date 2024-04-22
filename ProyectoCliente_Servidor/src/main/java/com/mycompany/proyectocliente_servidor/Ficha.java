@@ -1,18 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.proyectocliente_servidor;
 
-/**
- *
- * @author alumno
- */
 public class Ficha {
     private int numFicha;
-    private int posicion;
+    private int posicion;//Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
     private int casillasRecorridas;
     private colorEnum color;
+    private boolean fuera;//Hace referencia ha esta afuera del principio 
+    private boolean acabado;//Señale si la ficha ha llegado al final
 
     private static boolean posFinal = false;
     private static int r = 0;
@@ -38,9 +32,6 @@ public class Ficha {
         return CASILLAS_RECORRER -casillasRecorridas;
     }
 
-
-
-    
     public void moverFicha(int valorDado){
 
         if(casillasRecorridas < CASILLAS_RECORRER){
@@ -66,6 +57,86 @@ public class Ficha {
             }
         }
     }
+
+    public colorEnum getColor() {
+        return color;
+    }
+
+    public boolean isFuera() {
+        return fuera;
+    }
+
+    public boolean isAcabado() {
+        return acabado;
+    }
+
+    public static boolean isPosFinal() {
+        return posFinal;
+    }
+
+    public static int getR() {
+        return r;
+    }
+
+    public static int getCASILLAS_RECORRER() {
+        return CASILLAS_RECORRER;
+    }
+
+    public static int getCASILLAS_FINAL() {
+        return CASILLAS_FINAL;
+    }
+
+    public void setCasillasRecorridas(int casillasRecorridas) {
+        this.casillasRecorridas = casillasRecorridas;
+    }
+
+    public void setPosicion(int posicion) {
+        this.posicion = posicion;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ficha other = (Ficha) obj;
+        if (this.numFicha != other.numFicha) {
+            return false;
+        }
+        if (this.posicion != other.posicion) {
+            return false;
+        }
+        if (this.casillasRecorridas != other.casillasRecorridas) {
+            return false;
+        }
+        if (this.fuera != other.fuera) {
+            return false;
+        }
+        if (this.acabado != other.acabado) {
+            return false;
+        }
+        return this.color == other.color;
+    }
+    public void fichaComida(){
+        posicion=0;
+        fuera=false;
+        casillasRecorridas=CASILLAS_RECORRER;
+    }
+    
+    
+    
     
 }
 //Prueba cambio Pablo
