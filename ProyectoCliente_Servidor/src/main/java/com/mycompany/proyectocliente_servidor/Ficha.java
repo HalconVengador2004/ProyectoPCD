@@ -7,7 +7,7 @@ public class Ficha {
     public ColorEnum color;
     private boolean fuera;//Hace referencia ha esta afuera del principio 
     private boolean acabado;//Señale si la ficha ha llegado al final
-
+    private boolean segura=true;//si acaba de salir de casa y no puede ser comida
     private static boolean posFinal = false;
     private static int r = 0;
     private static final int CASILLAS_RECORRER = 63;
@@ -133,6 +133,14 @@ public class Ficha {
         posicion=0;
         fuera=false;
         casillasRecorridas=CASILLAS_RECORRER;
+    }
+
+    public boolean isSegura() {
+        return segura;
+    }
+
+    public void setSegura(boolean segura) {
+        this.segura = segura;
     }
     
     

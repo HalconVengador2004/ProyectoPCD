@@ -51,7 +51,6 @@ public class Tablero {
         lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego()+1);
 
     }
-//prueba
     public void lanzarDado(int jugadorQueLanza) {
         System.out.println("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
@@ -104,6 +103,9 @@ public class Tablero {
             for (int i = 0; i < tirada; i++) {
                 if (comprobar1Mov(ficha)) {
                     ficha.setPosicion(ficha.getPosicion() + 1);
+                    if(ficha.getPosicion()==69){//Que el tablero sea circular
+                        ficha.setPosicion(1);
+                    }
                 } else {
                     System.out.println("La ficha ha sido bloqueda");
                     ficha.setPosicion(posInicial); // Si hay una barrera retrocedemos la ficha a donde estaba antes de comprobar si se puede mover
@@ -113,6 +115,11 @@ public class Tablero {
             //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
             tablero.get(ficha.getPosicion()).add(ficha);
             tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
+            
+            //Si se ha movido ya no estara en casilla de su color y se puede comer
+            if (posInicial != ficha.getPosicion()){
+                ficha.setSegura(false);
+            }
 
         }
         /*
@@ -134,7 +141,7 @@ public class Tablero {
         }
          */
         ArrayList<Ficha> fichasCasilla = tablero.get(ficha.getPosicion());
-        if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color) {
+        if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()){
             fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
             //Falta preguntar al jugador que ficha desea mover
         }
