@@ -51,7 +51,7 @@ public class Tablero {
         lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego()+1);
 
     }
-
+//prueba
     public void lanzarDado(int jugadorQueLanza) {
         System.out.println("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
