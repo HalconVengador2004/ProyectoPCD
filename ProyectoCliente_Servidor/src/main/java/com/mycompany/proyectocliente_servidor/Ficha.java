@@ -142,6 +142,28 @@ public class Ficha {
     public void setSegura(boolean segura) {
         this.segura = segura;
     }
+
+    @Override
+    public String toString() {
+        String inicial="err";
+        if(null!=color)switch (color) {
+            case AMARILLO:
+                inicial="Y";
+                break;
+            case AZUL:
+                inicial="B";
+                break;
+            case ROJO:
+                inicial="R";
+                break;
+            case VERDE:
+                inicial="G";
+                break;
+            default:
+                break;
+        }
+        return numFicha+inicial;
+    }
     
     
     

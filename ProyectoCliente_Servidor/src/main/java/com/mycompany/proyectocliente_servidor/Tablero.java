@@ -21,8 +21,6 @@ public class Tablero {
     private Jugador[] lJugadores = new Jugador[4];
     private ArrayList<ArrayList<Ficha>> tablero = new ArrayList<>(); // En cada casilla puede haber hasta dos fichas
 
-    
-
     public Tablero(Jugador[] lJugadores) {
         this.lJugadores = lJugadores;
         //Preparamos el tablero
@@ -33,53 +31,32 @@ public class Tablero {
         }
     }
 
-    private void agregarFichaATablero(int numJugador) {
-
-        int numFichasEnJuego = lJugadores[numJugador].getNumeroFichasEnJuego();
+    private void agregarFichaATablero(int numJugador, int numFicha) {
         switch (numJugador) {
             case 0 -> //Amarillo
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 5, 0, ColorEnum.AMARILLO);
+                lFichas[numJugador][numFicha].setPosicion(5);
             case 1 -> //rojo
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 39, 0, ColorEnum.ROJO);
+                lFichas[numJugador][numFicha].setPosicion(39);
             case 2 -> //azul
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 22, 0, ColorEnum.AZUL);
+                lFichas[numJugador][numFicha].setPosicion(22);
             case 3 -> //verde
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 56, 0, ColorEnum.VERDE);
+                lFichas[numJugador][numFicha].setPosicion(56);
             default -> {
             }
         }
-        lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego()+1);
+        lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego() + 1);
 
     }
+
     public void lanzarDado(int jugadorQueLanza) {
         System.out.println("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
-        if (dado == 5 && numeroFichasEnJuegoJugador(jugadorQueLanza) < 4) {
-            agregarFichaATablero(jugadorQueLanza);
-            System.out.println("Ha salido un 5. El jugador " + lJugadores[jugadorQueLanza] + " ha obtenido una ficha!");
-        } else if (numeroFichasEnJuegoJugador(jugadorQueLanza) > 0){
-            System.out.println("Ha salido el numero " + dado);
-            for(int i = 0 ; i < lFichas[jugadorQueLanza].length ; i++){
-                if (lFichas[jugadorQueLanza][i] != null){
-                    System.out.println("La ficha " + lFichas[jugadorQueLanza][i].getNumFicha() + " se encuentra en la posicion " + lFichas[jugadorQueLanza][i].getPosicion() + ". Le quedan por recorrer " + lFichas[jugadorQueLanza][i].getCasillasRecorridas() + " casillas");
-                }
-                
-            }
-            System.out.println("¿Que ficha quieres mover?");
-            Scanner scanner = new Scanner(System.in);
-            int ficha = scanner.nextInt();
-            moverFicha(jugadorQueLanza, ficha, dado);
-        }
-    }
-
-    public int numeroFichasEnJuegoJugador(int numJugador) {
-        int contador = 0;
-        for (int i = 0; i < lFichas[numJugador].length; i++) {
-            if (lFichas[numJugador][i] != null) {
-                contador++;
-            }
-        }
-        return contador;
+        System.out.println("Ha salido el numero " + dado);
+        mostrarTablero();
+        System.out.println("¿Que ficha quieres mover?");
+        Scanner scanner = new Scanner(System.in);
+        int ficha = scanner.nextInt();
+        moverFicha(jugadorQueLanza, ficha, dado);
     }
 
     public boolean hayBarrera(int numCasilla) {
@@ -103,7 +80,7 @@ public class Tablero {
             for (int i = 0; i < tirada; i++) {
                 if (comprobar1Mov(ficha)) {
                     ficha.setPosicion(ficha.getPosicion() + 1);
-                    if(ficha.getPosicion()==69){//Que el tablero sea circular
+                    if (ficha.getPosicion() == 69) {//Que el tablero sea circular
                         ficha.setPosicion(1);
                     }
                 } else {
@@ -114,13 +91,19 @@ public class Tablero {
             }
             //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
             tablero.get(ficha.getPosicion()).add(ficha);
-            tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
-            
+            if(posInicial!=0){//Si estaba en casa(pos 0) no estab en el tablero y no hace falta borrarla, solo añadirla
+                tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
+            }
             //Si se ha movido ya no estara en casilla de su color y se puede comer
-            if (posInicial != ficha.getPosicion()){
+            if (posInicial != ficha.getPosicion()) {
                 ficha.setSegura(false);
             }
-
+        }else{
+            if(tirada==5){
+                agregarFichaATablero(numJugador, numFicha);
+            }else{
+                System.out.println("No has podido sacar la ficha de casa, necesitas un 5 para salir. ");
+            }
         }
         /*
         if (posInicial != ficha.getPosicion()) {//Si se ha llegado a mover actualizamos las barreras y vemos si comemos
@@ -141,11 +124,13 @@ public class Tablero {
         }
          */
         ArrayList<Ficha> fichasCasilla = tablero.get(ficha.getPosicion());
-        if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()){
+        if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()) {
+            fichasCasilla.get(0).fichaComida();
             fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
             //Falta preguntar al jugador que ficha desea mover
         }
     }
+
     public int getTurnoJugador() {
         return turnoJugador;
     }
@@ -154,4 +139,22 @@ public class Tablero {
         this.turnoJugador = turnoJugador;
     }
 
+    public void mostrarTablero() {//version provisional para comprobar las funciones
+        for (int i = 1; i < 11; i++) {
+            System.out.print(i + " ,_");
+        }
+        for (int i = 10; i < 69; i++) {
+            System.out.print(i + ",_");
+        }
+        for (int n = 0; n < NUMFICHAS; n++) {
+            for (int c = 1; c < 69; c++) {
+                if (tablero.get(c).get(n) != null) {
+                    System.out.print(tablero.get(c).get(n) + ",_");
+                } else {
+                    System.out.print("  ,_");
+                }
+            }
+        }
+
+    }
 }
