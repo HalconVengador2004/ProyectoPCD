@@ -86,8 +86,10 @@ public class Tablero {
         return tablero.get(numCasilla).size() > 1; //Solo verdadero si hay dos fichas en una casilla
     }
 
-    public boolean comprobar1Mov(Ficha ficha) {
-
+    public boolean comprobar1Mov(Ficha ficha) { 
+        // (SERGIO ) Cuando haces un movimiento, puede que adelante tengas una barrera,
+        //Se va comprobando en cada casilla si la siguiente tiene barrera, de manera que si se llega a una
+        //Se pierde el turno y se vuelve a la casilla inicial
         int casillaSig = ficha.getPosicion() + 1;
         if (casillaSig == 69) {
             casillaSig = 1;
@@ -146,11 +148,11 @@ public class Tablero {
             //Falta preguntar al jugador que ficha desea mover
         }
     }
-    public int getTurnoJugador() {
+    public int getTurnoJugador() { //(SERGIO) Devuelve el turno del jugador al que le toca (MODULO 4)
         return turnoJugador;
     }
 
-    public void setTurnoJugador(int turnoJugador) {
+    public void setTurnoJugador(int turnoJugador) { //(SERGIO) Se modifica el turno del jugador al que le toca (MODULO 4)
         this.turnoJugador = turnoJugador;
     }
 
