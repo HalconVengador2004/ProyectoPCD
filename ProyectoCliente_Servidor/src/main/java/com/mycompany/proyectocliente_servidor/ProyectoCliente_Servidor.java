@@ -23,10 +23,10 @@ public class ProyectoCliente_Servidor {
         Tablero tablero = new Tablero(jugadores);
         int jugadorInicial = 0;
         while (true) {//Falta determinar cuando acaba la partida y quien empieza
-
+            System.out.println("Turno de Jugador " + jugadorInicial);
             tablero.lanzarDado(jugadorInicial);
-            jugadorInicial = (jugadorInicial + 1)%4;
             tablero.setTurnoJugador(jugadorInicial);
+            jugadorInicial = (jugadorInicial + 1)%4;
         }
     }
 }

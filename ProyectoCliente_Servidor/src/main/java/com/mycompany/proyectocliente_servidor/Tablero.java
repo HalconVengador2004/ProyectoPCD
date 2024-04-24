@@ -3,6 +3,7 @@ package com.mycompany.proyectocliente_servidor;
 //Si comes una ficha la ficha comida volvera a casa y el jugador que mueve puede mover 20 una de sus fichas
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 //Es necesario sacar un 5 para salir de casa
@@ -19,7 +20,7 @@ public class Tablero {
     private boolean[] casillas = new boolean[68];
     private int turnoJugador = 0; //Debe ser (mod 4). Para esto falta por ver cuando acaba el turno de un jugador
     private Jugador[] lJugadores = new Jugador[4];
-    private ArrayList<ArrayList<Ficha>> tablero = new ArrayList<>(); // En cada casilla puede haber hasta dos fichas
+    private ArrayList<ArrayList<Ficha>> tablero; // En cada casilla puede haber hasta dos fichas
 
     
 
@@ -30,6 +31,10 @@ public class Tablero {
             for (int f = 0; f < NUMFICHAS; f++) {
                 lFichas[j][f] = null;//Al principio de la partida ningun jugador tiene fichas. Las añadimos cuando saquen 5
             }
+        }
+        this.tablero = new ArrayList<>(NUMCASILLAS);
+        for (int i = 0; i < NUMCASILLAS; i++) {
+            this.tablero.add(new ArrayList<>());
         }
     }
 
@@ -48,6 +53,7 @@ public class Tablero {
             default -> {
             }
         }
+        tablero.get(lFichas[numJugador][numFichasEnJuego].getPosicion()).add(lFichas[numJugador][numFichasEnJuego]); //Pasamos la ficha de la lista al tablero
         lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego()+1);
 
     }
@@ -56,7 +62,7 @@ public class Tablero {
         int dado = (int) (Math.random() * 6 + 1);
         if (dado == 5 && numeroFichasEnJuegoJugador(jugadorQueLanza) < 4) {
             agregarFichaATablero(jugadorQueLanza);
-            System.out.println("Ha salido un 5. El jugador " + lJugadores[jugadorQueLanza] + " ha obtenido una ficha!");
+            System.out.println("Ha salido un 5. El jugador " + jugadorQueLanza + " ha obtenido una ficha!");
         } else if (numeroFichasEnJuegoJugador(jugadorQueLanza) > 0){
             System.out.println("Ha salido el numero " + dado);
             for(int i = 0 ; i < lFichas[jugadorQueLanza].length ; i++){
@@ -65,10 +71,14 @@ public class Tablero {
                 }
                 
             }
-            System.out.println("¿Que ficha quieres mover?");
-            Scanner scanner = new Scanner(System.in);
-            int ficha = scanner.nextInt();
-            moverFicha(jugadorQueLanza, ficha, dado);
+            int codigo;
+            do {
+                System.out.println("¿Que ficha quieres mover?");
+                Scanner scanner = new Scanner(System.in);
+                int ficha = scanner.nextInt();
+                codigo = moverFicha(jugadorQueLanza, ficha, dado);
+            } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
+            
         }
     }
 
@@ -98,7 +108,7 @@ public class Tablero {
         //Otro caso posible entra en la recta final se puede bloquear a si mismo?
     }
 
-    public void moverFicha(int numJugador, int numFicha, int tirada) {
+    public int moverFicha(int numJugador, int numFicha, int tirada) {
         Ficha ficha = lFichas[numJugador][numFicha];
         int posInicial = ficha.getPosicion();
         if (ficha.isFuera()) {//Caso general
@@ -109,9 +119,9 @@ public class Tablero {
                         ficha.setPosicion(1);
                     }
                 } else {
-                    System.out.println("La ficha ha sido bloqueda");
+                    System.out.println("Movimiento inválido. Elige otro movimiento.");
                     ficha.setPosicion(posInicial); // Si hay una barrera retrocedemos la ficha a donde estaba antes de comprobar si se puede mover
-                    break;
+                    return 1; 
                 }
             }
             //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
@@ -122,6 +132,7 @@ public class Tablero {
             if (posInicial != ficha.getPosicion()){
                 ficha.setSegura(false);
             }
+            
 
         }
         /*
@@ -147,6 +158,7 @@ public class Tablero {
             fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
             //Falta preguntar al jugador que ficha desea mover
         }
+        return 0;
     }
     public int getTurnoJugador() { //(SERGIO) Devuelve el turno del jugador al que le toca (MODULO 4)
         return turnoJugador;
@@ -154,6 +166,24 @@ public class Tablero {
 
     public void setTurnoJugador(int turnoJugador) { //(SERGIO) Se modifica el turno del jugador al que le toca (MODULO 4)
         this.turnoJugador = turnoJugador;
+    }
+    public void mostrarTablero() {//version provisional para comprobar las funciones
+        for (int i = 1; i < 11; i++) {
+            System.out.print(i + " ,_");
+        }
+        for (int i = 10; i < 69; i++) {
+            System.out.print(i + ",_");
+        }
+        for (int n = 0; n < NUMFICHAS; n++) {
+            for (int c = 1; c < 69; c++) {
+                if (tablero.get(c).get(n) != null) {
+                    System.out.print(tablero.get(c).get(n) + ",_");
+                } else {
+                    System.out.print("  ,_");
+                }
+            }
+        }
+
     }
 
 }
