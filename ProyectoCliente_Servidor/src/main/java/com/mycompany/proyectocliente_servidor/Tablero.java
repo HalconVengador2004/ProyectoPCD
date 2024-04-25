@@ -29,7 +29,7 @@ public class Tablero {
         //Preparamos el tablero
         for (int j = 0; j < NUMJUGADORES; j++) {
             for (int f = 0; f < NUMFICHAS; f++) {
-                lFichas[j][f] = null;//Al principio de la partida ningun jugador tiene fichas. Las añadimos cuando saquen 5
+                lFichas[j][f] = new Ficha(f, 0, 0, ColorEnum.ROJO);//creacion de prueba para comprobar
             }
         }
         this.tablero = new ArrayList<>(NUMCASILLAS);
