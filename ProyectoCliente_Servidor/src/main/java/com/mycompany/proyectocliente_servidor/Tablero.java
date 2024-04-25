@@ -29,7 +29,7 @@ public class Tablero {
         //Preparamos el tablero
         for (int j = 0; j < NUMJUGADORES; j++) {
             for (int f = 0; f < NUMFICHAS; f++) {
-                lFichas[j][f] = null;//Al principio de la partida ningun jugador tiene fichas. Las añadimos cuando saquen 5
+                lFichas[j][f] = new Ficha(f, 0, 0, ColorEnum.ROJO);//creacion de prueba para comprobar
             }
         }
         this.tablero = new ArrayList<>(NUMCASILLAS);
@@ -168,20 +168,23 @@ public class Tablero {
         this.turnoJugador = turnoJugador;
     }
     public void mostrarTablero() {//version provisional para comprobar las funciones
-        for (int i = 1; i < 11; i++) {
+        for (int i = 1; i < 10; i++) {
             System.out.print(i + " ,_");
         }
         for (int i = 10; i < 69; i++) {
             System.out.print(i + ",_");
         }
+        System.out.println("");
+        String space;
         for (int n = 0; n < NUMFICHAS; n++) {
-            for (int c = 1; c < 69; c++) {
-                if (tablero.get(c).get(n) != null) {
-                    System.out.print(tablero.get(c).get(n) + ",_");
-                } else {
+            for (int c = 1; c < 68; c++) {
+                if(tablero.get(c)==null || tablero.get(c).isEmpty()){
                     System.out.print("  ,_");
+                }else{
+                    System.out.print(tablero.get(c).get(n) + ",_");
                 }
             }
+            System.out.println("");
         }
 
     }

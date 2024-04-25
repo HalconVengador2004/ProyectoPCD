@@ -13,6 +13,10 @@ public class MainPruebaTablero {
         lJugadores[2]=c;
         lJugadores[3]=d;
         Tablero tab=new Tablero(lJugadores);
+        tab.moverFicha(0, 0, 5);
+        tab.moverFicha(1, 0, 5);
+        tab.moverFicha(2, 0, 5);
+        tab.moverFicha(3, 0, 5);
         
         tab.mostrarTablero();
     }
