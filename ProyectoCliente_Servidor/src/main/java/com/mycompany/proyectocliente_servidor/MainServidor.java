@@ -4,9 +4,15 @@
  */
 package com.mycompany.proyectocliente_servidor;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -14,24 +20,69 @@ import java.net.Socket;
  */
 public class MainServidor {
 
-    /**
-     * @param args the command line arguments
-     */
+    private static final int NUMJUGADORES = 4;
+    private static final ArrayList<Socket> socketJugadores = new ArrayList<>();
+    private static final ArrayList<PrintWriter> printWriterJugadores = new ArrayList<>();
+    private static final ArrayList<BufferedReader> bufferedReaderJugadores = new ArrayList<>();
+
     public static void main(String[] args) {
-        try{
+        try {
             ServerSocket serverSocket = new ServerSocket(44444);  //Una vez creado nos quedamos a la espera de que alguien se conecte
-            while(true){
-                System.out.println("Servidor abierto. Esperando a los jugadores...");
-                Socket jugador = serverSocket.accept(); 
-                //////////
+            System.out.println("Servidor abierto. Esperando a los jugadores...");
+            while (socketJugadores.size() < NUMJUGADORES) {
+                Socket jugador = serverSocket.accept();
+                socketJugadores.add(jugador);
+
+                //Notificamos al jugador de que está conectado al servidor y le informamos del color que le ha tocado
+                printWriterJugadores.add(new PrintWriter(jugador.getOutputStream(), true));
+                bufferedReaderJugadores.add(new BufferedReader(new InputStreamReader(jugador.getInputStream())));
+                System.out.println("Jugadores conectados: " + socketJugadores.size());
+                notificarTodos("Jugadores conectados: " + socketJugadores.size());
+
             }
 
+            notificarTodos("La partida está comenzando...");
+            Jugador[] jugadores = new Jugador[4];
+            for (int i = 0; i < jugadores.length; i++) {
+                jugadores[i] = new Jugador(ColorEnum.values()[i], socketJugadores.get(i));
 
-        }catch(IOException e){
+            }
+            Tablero tablero = new Tablero(jugadores);
+            int jugadorInicial = 0;
+            while (true) {
+                System.out.println("Turno de Jugador " + ColorEnum.values()[jugadorInicial]);
+                tablero.lanzarDado(jugadorInicial);
+                tablero.setTurnoJugador(jugadorInicial);
+                jugadorInicial = (jugadorInicial + 1) % 4;
+
+            }
+
+        } catch (IOException e) {
             System.err.println("Capturada InterruptedException. Mensaje: " + e.getMessage());
             e.printStackTrace(System.out);
             System.exit(1);
         }
     }
-    
+
+    public static void notificarTodos(String mensaje) {
+        for (int i = 0; i < socketJugadores.size(); i++) {
+            printWriterJugadores.get(i).println(mensaje);
+        }
+    }
+
+    public static void notificarJugador(String mensaje, int numJugador) {
+        printWriterJugadores.get(numJugador).println(mensaje);
+    }
+
+    public static String leerNotificacion(int numJugador) {
+        try {
+            //Restringimos la lectura para que otros jugadores no puedan cambiar el movimiento del jugador activo
+            return bufferedReaderJugadores.get(numJugador).readLine();
+        } catch (IOException ex) {
+            Logger.getLogger(MainServidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            return null;
+        }
+    }
 }

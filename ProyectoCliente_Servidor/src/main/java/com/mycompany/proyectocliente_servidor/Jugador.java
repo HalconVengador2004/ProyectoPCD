@@ -4,6 +4,8 @@
  */
 package com.mycompany.proyectocliente_servidor;
 
+import java.net.Socket;
+
 /**
  *
  * @author alumno
@@ -12,10 +14,12 @@ public class Jugador {
     private Ficha[] fichas;
     private ColorEnum colorJugador;
     private int  numeroFichasEnJuego;
+    private Socket socket;
 
-    public Jugador(ColorEnum colorJugador) {
+    public Jugador(ColorEnum colorJugador, Socket socket) {
         this.colorJugador = colorJugador;
         this.numeroFichasEnJuego = 0;
+        this.socket = socket;
     }
 
     public ColorEnum getColorJugador() {

@@ -57,29 +57,34 @@ public class Tablero {
     }
 
     public void lanzarDado(int jugadorQueLanza) {
-        System.out.println("Se lanza el dado");
+        MainServidor.notificarTodos("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
         if (dado == 5 && numeroFichasEnJuegoJugador(jugadorQueLanza) < 4) {
             agregarFichaATablero(jugadorQueLanza);
-            System.out.println("Ha salido un 5. El jugador " + ColorEnum.values()[jugadorQueLanza] + " ha obtenido una ficha!");
-        } else if (numeroFichasEnJuegoJugador(jugadorQueLanza) > 0) {
-            System.out.println("Ha salido el numero " + dado);
+            MainServidor.notificarTodos("Ha salido un 5. El jugador " + ColorEnum.values()[jugadorQueLanza] + " ha obtenido una ficha!");
+        } else if (lJugadores[jugadorQueLanza].getNumeroFichasEnJuego() > 0) {
+            MainServidor.notificarTodos("Ha salido el numero " + dado);
+            MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
             System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
             for (int j = 0; j < NUMJUGADORES; j++) {
                 System.out.println(ColorEnum.values()[j] + ":");
+                MainServidor.notificarTodos(ColorEnum.values()[j] + ":");
                 for (int i = 0; i < lFichas[j].length; i++) {
                     if (lFichas[j][i] != null && lFichas[j][i].getPosicion() != 0) {
+                        MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
                         System.out.println("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
                     }
 
                 }
             }
-
             int codigo;
             do {
-                System.out.println("¿Que ficha quieres mover?");
-                Scanner scanner = new Scanner(System.in);
-                int ficha = scanner.nextInt();
+                MainServidor.notificarJugador("¿Que ficha quieres mover?",jugadorQueLanza);
+                String notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
+                while (notificacion == null){
+                    notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
+                }
+                int ficha = Integer.getInteger(notificacion);
                 codigo = moverFicha(jugadorQueLanza, ficha, dado);
             } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
 
@@ -123,7 +128,7 @@ public class Tablero {
                     ficha.setPosicion(1);
                 }
             } else {
-                System.out.println("Movimiento inválido. Elige otro movimiento.");
+                MainServidor.notificarJugador("Movimiento inválido. Elige otro movimiento.",numJugador);
                 ficha.setPosicion(posInicial); // Si hay una barrera retrocedemos la ficha a donde estaba antes de comprobar si se puede mover
                 return 1;
             }

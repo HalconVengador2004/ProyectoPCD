@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class ProyectoCliente_Servidor {
 
     public static void main(String[] args) {
-
+        /*
         Jugador[] jugadores = new Jugador[4];
         for (int i = 0; i < jugadores.length; i++) {
             jugadores[i] = new Jugador(ColorEnum.values()[i]);
@@ -28,5 +28,7 @@ public class ProyectoCliente_Servidor {
             tablero.setTurnoJugador(jugadorInicial);
             jugadorInicial = (jugadorInicial + 1)%4;
         }
+*/
     }
+
 }
