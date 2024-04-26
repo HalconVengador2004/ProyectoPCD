@@ -84,10 +84,12 @@ public class Tablero {
                 while (notificacion == null){
                     notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
                 }
-                int ficha = Integer.getInteger(notificacion);
+                int ficha = Integer.getInteger(notificacion); 
                 codigo = moverFicha(jugadorQueLanza, ficha, dado);
             } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
 
+        }else{
+            MainServidor.notificarTodos("No has sacado un cinco, y no tienen ninguna ficha, por lo cual no puedes hacer nada");
         }
     }
 
