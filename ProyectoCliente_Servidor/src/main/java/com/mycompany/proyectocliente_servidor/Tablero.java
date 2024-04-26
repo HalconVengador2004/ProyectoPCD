@@ -80,11 +80,15 @@ public class Tablero {
             int codigo;
             do {
                 MainServidor.notificarJugador("¿Que ficha quieres mover?",jugadorQueLanza);
+                System.out.println("---ESPERANDO ELECCION JUGADOR---");
                 String notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
+                
                 while (notificacion == null){
                     notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
                 }
-                int ficha = Integer.getInteger(notificacion); 
+                
+                int ficha = Integer.parseInt(notificacion); 
+                System.out.println("---ELECCION JUGADOR RECIBIDA---");
                 codigo = moverFicha(jugadorQueLanza, ficha, dado);
             } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
 

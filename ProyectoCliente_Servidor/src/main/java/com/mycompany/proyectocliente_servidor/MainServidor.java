@@ -75,14 +75,14 @@ public class MainServidor {
     }
 
     public static String leerNotificacion(int numJugador) {
+        String notificacion = null;
         try {
-            //Restringimos la lectura para que otros jugadores no puedan cambiar el movimiento del jugador activo
-            return bufferedReaderJugadores.get(numJugador).readLine();
+            // Restringimos la lectura para que otros jugadores no puedan cambiar el movimiento del jugador activo
+            notificacion = bufferedReaderJugadores.get(numJugador).readLine();
         } catch (IOException ex) {
             Logger.getLogger(MainServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        finally {
-            return null;
-        }
+        return notificacion;
     }
+
 }
