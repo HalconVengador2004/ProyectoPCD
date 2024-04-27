@@ -1,4 +1,4 @@
-package com.mycompany.proyectocliente_servidor;
+    package com.mycompany.proyectocliente_servidor;
 
 public class Ficha {
     private int numFicha;

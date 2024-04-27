@@ -13,30 +13,14 @@ import java.net.Socket;
 public class Jugador {
     private Ficha[] fichas;
     private ColorEnum colorJugador;
-    private int  numeroFichasEnJuego;
     private Socket socket;
 
     public Jugador(ColorEnum colorJugador, Socket socket) {
         this.colorJugador = colorJugador;
-        this.numeroFichasEnJuego = 0;
         this.socket = socket;
     }
 
     public ColorEnum getColorJugador() {
         return colorJugador;
     }
-
-    public int getNumeroFichasEnJuego() {
-        return numeroFichasEnJuego;
-    }
-
-    public void setNumeroFichasEnJuego(int numeroFichasEnJuego) {
-        this.numeroFichasEnJuego = numeroFichasEnJuego;
-    }
-
-
-    
-    
-    
-
 }

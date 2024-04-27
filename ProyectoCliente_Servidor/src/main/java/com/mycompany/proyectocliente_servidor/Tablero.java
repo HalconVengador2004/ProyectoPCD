@@ -31,80 +31,75 @@ public class Tablero {
             }
         }
         this.tablero = new ArrayList<>(NUMCASILLAS);
-        for (int i = 0; i < NUMCASILLAS+1; i++) {
+        for (int i = 0; i < NUMCASILLAS + 1; i++) {
             this.tablero.add(new ArrayList<>());
         }
     }
 
-    private void agregarFichaATablero(int numJugador) {
-
-        int numFichasEnJuego = lJugadores[numJugador].getNumeroFichasEnJuego();
+    private void agregarFichaATablero(int numJugador, int numFicha) {
         switch (numJugador) {
             case 0 -> //Amarillo
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 5, 0, ColorEnum.AMARILLO);
+                lFichas[numJugador][numFicha].setPosicion(5);
             case 1 -> //rojo
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 39, 0, ColorEnum.ROJO);
+                lFichas[numJugador][numFicha].setPosicion(39);
             case 2 -> //azul
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 22, 0, ColorEnum.AZUL);
+                lFichas[numJugador][numFicha].setPosicion(22);
             case 3 -> //verde
-                lFichas[numJugador][numFichasEnJuego] = new Ficha(numFichasEnJuego, 56, 0, ColorEnum.VERDE);
+                lFichas[numJugador][numFicha].setPosicion(56);
             default -> {
             }
         }
-        tablero.get(lFichas[numJugador][numFichasEnJuego].getPosicion()).add(lFichas[numJugador][numFichasEnJuego]); //Pasamos la ficha de la lista al tablero
-        lJugadores[numJugador].setNumeroFichasEnJuego(lJugadores[numJugador].getNumeroFichasEnJuego() + 1);
-
+        tablero.get(lFichas[numJugador][numFicha].getPosicion()).add(lFichas[numJugador][numFicha]); //Pasamos la ficha de la lista al tablero
     }
 
     public void lanzarDado(int jugadorQueLanza) {
         MainServidor.notificarTodos("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
-        if (dado == 5 && numeroFichasEnJuegoJugador(jugadorQueLanza) < 4) {
-            agregarFichaATablero(jugadorQueLanza);
-            MainServidor.notificarTodos("Ha salido un 5. El jugador " + ColorEnum.values()[jugadorQueLanza] + " ha obtenido una ficha!");
-        } else if (lJugadores[jugadorQueLanza].getNumeroFichasEnJuego() > 0) {
-            MainServidor.notificarTodos("Ha salido el numero " + dado);
-            MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
-            System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
-            for (int j = 0; j < NUMJUGADORES; j++) {
-                System.out.println(ColorEnum.values()[j] + ":");
-                MainServidor.notificarTodos(ColorEnum.values()[j] + ":");
-                for (int i = 0; i < lFichas[j].length; i++) {
-                    if (lFichas[j][i] != null && lFichas[j][i].getPosicion() != 0) {
-                        MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
-                        System.out.println("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
-                    }
-
-                }
-            }
-            int codigo;
-            do {
-                MainServidor.notificarJugador("¿Que ficha quieres mover?",jugadorQueLanza);
-                System.out.println("---ESPERANDO ELECCION JUGADOR---");
-                String notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
-                
-                while (notificacion == null){
-                    notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
-                }
-                
-                int ficha = Integer.parseInt(notificacion); 
-                System.out.println("---ELECCION JUGADOR RECIBIDA---");
-                codigo = moverFicha(jugadorQueLanza, ficha, dado);
-            } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
-
-        }else{
-            MainServidor.notificarTodos("No has sacado un cinco, y no tienen ninguna ficha, por lo cual no puedes hacer nada");
+        MainServidor.notificarTodos("Ha salido el numero " + dado);
+        if (dado == 5) {
+            MainServidor.notificarJugador("Has sacado un cinco, si selecionas una ficha que este en tu casa saldra al tablero", jugadorQueLanza);
         }
-    }
+        MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
+        System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
+        for (int j = 0; j < NUMJUGADORES; j++) {//Parte tablero prov    
+            System.out.println(ColorEnum.values()[j] + ":");
+            MainServidor.notificarTodos(ColorEnum.values()[j] + ":");
+            for (int i = 0; i < lFichas[j].length; i++) {
+                if (lFichas[j][i] != null && lFichas[j][i].getPosicion() != 0) {
+                    MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
+                    System.out.println("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
+                }
 
-    public int numeroFichasEnJuegoJugador(int numJugador) {
+            }
+        }
+        int codigo;
         int contador = 0;
-        for (int i = 0; i < lFichas[numJugador].length; i++) {
-            if (lFichas[numJugador][i] != null) {
-                contador++;
+        do {
+            MainServidor.notificarJugador("¿Que ficha quieres mover?", jugadorQueLanza);
+            System.out.println("---ESPERANDO ELECCION JUGADOR---");
+            String notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
+
+            while (notificacion == null) {
+                notificacion = MainServidor.leerNotificacion(jugadorQueLanza);
             }
-        }
-        return contador;
+
+            int ficha = Integer.parseInt(notificacion);
+            System.out.println("---ELECCION JUGADOR RECIBIDA---");
+            if (ficha <= 3 & ficha >= 0) {
+                codigo = moverFicha(jugadorQueLanza, ficha, dado);
+                if (codigo == 1) {
+                    MainServidor.notificarJugador("No puedes mover la ficha escogida, por favor selecione otra. ", jugadorQueLanza);
+                    contador = contador + 1;
+                }
+            } else {
+                MainServidor.notificarJugador("No has seleccionado una ficha valida", jugadorQueLanza);
+                codigo = 1;
+            }
+            if (contador == 4) {
+                MainServidor.notificarJugador("No tienes moviemiento valido, o has intentado mover varias veces la misma fica, por lo tanto se te pasa el turno.", jugadorQueLanza);
+                codigo = 0;
+            }
+        } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
     }
 
     public boolean hayBarrera(int numCasilla) {
@@ -126,53 +121,61 @@ public class Tablero {
     public int moverFicha(int numJugador, int numFicha, int tirada) {
         Ficha ficha = lFichas[numJugador][numFicha];
         int posInicial = ficha.getPosicion();
-        //if (ficha.isFuera()) {//Caso general
-        for (int i = 0; i < tirada; i++) {
-            if (!comprobar1Mov(ficha)) {
-                ficha.setPosicion(ficha.getPosicion() + 1);
-                if (ficha.getPosicion() == 69) {//Que el tablero sea circular
-                    ficha.setPosicion(1);
+        if (ficha.isFuera()) {//Caso general
+            for (int i = 0; i < tirada; i++) {
+                if (!comprobar1Mov(ficha)) {
+                    ficha.setPosicion(ficha.getPosicion() + 1);
+                    if (ficha.getPosicion() == 69) {//Que el tablero sea circular
+                        ficha.setPosicion(1);
+                    }
+                } else {
+                    MainServidor.notificarJugador("Movimiento inválido. Elige otro movimiento.", numJugador);
+                    ficha.setPosicion(posInicial); // Si hay una barrera retrocedemos la ficha a donde estaba antes de comprobar si se puede mover
+                    return 1;
+                }
+            }
+            //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
+            tablero.get(ficha.getPosicion()).add(ficha);
+            tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
+
+            //Si se ha movido ya no estara en casilla de su color y se puede comer
+            if (posInicial != ficha.getPosicion()) {
+                ficha.setSegura(false);
+            }
+            ArrayList<Ficha> fichasCasilla = tablero.get(ficha.getPosicion());
+            if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()) {
+                fichasCasilla.get(0).fichaComida();//Se le vueven a poner los valores por defecto
+                fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
+                int comer=moverFicha(numJugador, numFicha, 20);
+                if(comer==0){
+                    MainServidor.notificarTodos("La ficha "+lFichas[numJugador][numFicha]+" ha comida una ficha y ha avanzado 20 posiciones.");
+                }else{
+                    MainServidor.notificarTodos("La ficha "+lFichas[numJugador][numFicha]+" ha comida una ficha y ha intentado avanzar 20 posiciones, pero ha sido bloqueada.");
+                }
+            }
+            return 0;
+        } else {//Quiere salir de casa
+            if (tirada == 5) {
+                int casillaSalida;
+                switch (numJugador) {
+                    case 0 -> casillaSalida = 5;
+                    case 1 -> casillaSalida = 39;
+                    case 2 -> casillaSalida = 22;
+                    case 3 -> casillaSalida = 56;
+                    default -> {casillaSalida = 0;
+                    }
+                }if(hayBarrera(casillaSalida)){
+                    MainServidor.notificarJugador("Movimiento invalido, la casilla de salida esta bloqueda.", numJugador);//la funcion ya la agrega a casillas
+                    return 1;
+                }else{
+                    agregarFichaATablero(numJugador, numFicha);
+                    return 0;
                 }
             } else {
-                MainServidor.notificarJugador("Movimiento inválido. Elige otro movimiento.",numJugador);
-                ficha.setPosicion(posInicial); // Si hay una barrera retrocedemos la ficha a donde estaba antes de comprobar si se puede mover
+                MainServidor.notificarJugador("La ficha seleccionada no puede salir de casa porque no has sacado un 5.", numJugador);
                 return 1;
             }
         }
-        //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
-        tablero.get(ficha.getPosicion()).add(ficha);
-        tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
-
-        //Si se ha movido ya no estara en casilla de su color y se puede comer
-        if (posInicial != ficha.getPosicion()) {
-            ficha.setSegura(false);
-        }
-
-        //}
-        /*
-        if (posInicial != ficha.getPosicion()) {//Si se ha llegado a mover actualizamos las barreras y vemos si comemos
-            //casillas[posInicial] = false;//Sabemos seguro que de donde se ha ido si habia barrera ya no hay
-            for (int j = 0; j < NUMJUGADORES; j++) {//Comparamos la posicion de la ficha con el resto de fichas
-                for (Ficha i : lFichas[j]) {
-                    if (j == numJugador) {//Si la ficha comparada es del mismo jugador miramos barrera
-                        if (i.getPosicion() == ficha.getPosicion() && !i.equals(ficha)) {//Si otra ficha del jugador esta en la misma posicion ponemos la barrera
-                            casillas[ficha.getPosicion()] = true;
-                        }
-                    } else if (i.getPosicion() == ficha.getPosicion()) {
-                        i.fichaComida();
-                        //Creo que seria ya parte del servidor para preguntar al jugador que ficha desea mover, pero ya con la funcion seria poner la funcion con tirada de 20
-                    }
-                }
-            }
-
-        }
-         */
-        ArrayList<Ficha> fichasCasilla = tablero.get(ficha.getPosicion());
-        if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()) {
-            fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
-            //Falta preguntar al jugador que ficha desea mover
-        }
-        return 0;
     }
 
     public int getTurnoJugador() { //(SERGIO) Devuelve el turno del jugador al que le toca (MODULO 4)
