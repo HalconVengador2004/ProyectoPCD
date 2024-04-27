@@ -263,5 +263,18 @@ public class Tablero {
         }
         return tab.toString();
     }
-
+    public int PartidaAcabada(){
+        int contador=0;
+        for(int i=0;i<NUMJUGADORES;i++){
+            for(int j=0;j<NUMFICHAS;j++){
+                if(lFichas[i][j].isAcabado()){
+                    contador=contador+1;
+                }
+            }
+            if(contador==4){
+                return i;
+            }
+        }
+        return 5;
+    }
 }
