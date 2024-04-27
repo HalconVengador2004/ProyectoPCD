@@ -12,7 +12,6 @@ import java.util.Scanner;
 //Si intentas sacar una ficha de casa que no puede ser sacada no se movera y perderas el turno
 //Sacar un seis de un turno extra, pero si lo haces tres veces seguidas la ultima ficha que moviste volvera a casa FALTA POR IMPLEMENTAR
 public class Tablero {
-
     private final int NUMJUGADORES = 4;
     private final int NUMFICHAS = 4;
     private final int NUMCASILLAS = 68;
@@ -121,12 +120,27 @@ public class Tablero {
     public int moverFicha(int numJugador, int numFicha, int tirada) {
         Ficha ficha = lFichas[numJugador][numFicha];
         int posInicial = ficha.getPosicion();
-        if (ficha.isFuera()) {//Caso general
+        if(ficha.isAcabado()){
+            MainServidor.notificarJugador("La ficha ya ha acabado, no puedes moverla", numJugador);
+            return 1;
+        }else if(ficha.isPosFinal()){
+            ficha.AumentarCasillasRecorridasFinal(tirada);
+            ficha.ComprobarAcabado();
+            if(ficha.isAcabado()){
+                MainServidor.notificarTodos("La ficha "+ ficha+ " ha llegado al final del tablero");
+            }
+            return 0;
+        }else if (ficha.isFuera()) {//Caso general
             for (int i = 0; i < tirada; i++) {
                 if (!comprobar1Mov(ficha)) {
                     ficha.setPosicion(ficha.getPosicion() + 1);
+                    ficha.AumentarCasillasRecorridas();
                     if (ficha.getPosicion() == 69) {//Que el tablero sea circular
                         ficha.setPosicion(1);
+                    }
+                    if(ficha.DadoVuelta()){//Si esta en la casilla de anttes de entrar al final
+                        ficha.setPosFinal(true);
+                        return moverFicha(numJugador, numFicha, tirada-i-1);
                     }
                 } else {
                     MainServidor.notificarJugador("Movimiento inválido. Elige otro movimiento.", numJugador);

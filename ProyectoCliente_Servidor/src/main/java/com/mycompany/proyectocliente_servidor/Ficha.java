@@ -4,16 +4,19 @@ public class Ficha {
     private int numFicha;
     private int posicion;//Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
     private int casillasRecorridas;
+    private int casillasRecorridasFinal;
     public ColorEnum color;
     private boolean fuera;//Hace referencia ha esta afuera del principio 
     private boolean acabado;//Señale si la ficha ha llegado al final
     private boolean segura=true;//si acaba de salir de casa y no puede ser comida
-    private static boolean posFinal = false;
+    private  boolean posFinal;
     private static int r = 0;
     private static final int CASILLAS_RECORRER = 63;
     private static final int CASILLAS_FINAL = 8;
 
     public Ficha(int numFicha, int posicion, int casillasRecorridas, ColorEnum color) {
+        this.casillasRecorridasFinal = 0;
+        this.posFinal = false;
         this.numFicha = numFicha;
         this.posicion = posicion;
         this.casillasRecorridas = casillasRecorridas;
@@ -31,33 +34,6 @@ public class Ficha {
     public int getCasillasRecorridas() {
         return CASILLAS_RECORRER -casillasRecorridas;
     }
-    /*
-    public void moverFicha(int valorDado){
-
-        if(casillasRecorridas < CASILLAS_RECORRER){
-            casillasRecorridas+=valorDado;
-            posicion += valorDado;
-
-            if(posicion > CASILLAS_RECORRER && casillasRecorridas < CASILLAS_RECORRER){
-                System.out.println("La ficha se ha movido a la posicion " + (posicion - CASILLAS_RECORRER));
-            }else if(posicion <= CASILLAS_RECORRER && casillasRecorridas < CASILLAS_RECORRER )
-                System.out.println("La ficha se ha movido a la posicion " + posicion);
-            else{
-                System.out.println("La ficha ha llegado a la recta final");
-                posFinal = true;
-                r = casillasRecorridas -CASILLAS_RECORRER;
-            }
-
-        }else {
-            r+=valorDado;
-            if(r>CASILLAS_FINAL){
-                r-=(r-CASILLAS_FINAL);
-            }else if(r == CASILLAS_FINAL){
-                System.out.println("La ficha ha completado el recorrido");
-            }
-        }
-    }
-    */
     public ColorEnum getColor() {
         return color;
     }
@@ -70,7 +46,7 @@ public class Ficha {
         return acabado;
     }
 
-    public static boolean isPosFinal() {
+    public boolean isPosFinal() {
         return posFinal;
     }
 
@@ -86,8 +62,8 @@ public class Ficha {
         return CASILLAS_FINAL;
     }
 
-    public void setCasillasRecorridas(int casillasRecorridas) {
-        this.casillasRecorridas = casillasRecorridas;
+    public void AumentarCasillasRecorridas() {
+        this.casillasRecorridas = casillasRecorridas+1;
     }
 
     public void setPosicion(int posicion) {
@@ -133,6 +109,7 @@ public class Ficha {
         posicion=0;
         fuera=false;
         casillasRecorridas=CASILLAS_RECORRER;
+        posFinal=false;
     }
 
     public boolean isSegura() {
@@ -164,9 +141,29 @@ public class Ficha {
         }
         return numFicha+inicial;
     }
-    
-    
-    
-    
+
+    public void setPosFinal(boolean posFinal) {
+        this.posFinal=posFinal;
+    }
+    public boolean DadoVuelta(){
+        if(casillasRecorridas==CASILLAS_RECORRER){
+            return true;
+        }else{
+            return false; 
+        }
+    }
+
+    public int getCasillasRecorridasFinal() {
+        return casillasRecorridasFinal;
+    }
+
+    public void AumentarCasillasRecorridasFinal(int casillasRecorridasFinal) {
+        this.casillasRecorridasFinal = this.casillasRecorridasFinal+casillasRecorridasFinal;
+    }
+    public void ComprobarAcabado(){
+        if(casillasRecorridasFinal>=CASILLAS_FINAL){
+            this.acabado=true;
+        }
+    }
 }
-//Prueba cambio Pablo
+
