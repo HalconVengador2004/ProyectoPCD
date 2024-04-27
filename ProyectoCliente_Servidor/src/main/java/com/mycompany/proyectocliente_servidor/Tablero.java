@@ -12,6 +12,7 @@ import java.util.Scanner;
 //Si intentas sacar una ficha de casa que no puede ser sacada no se movera y perderas el turno
 //Sacar un seis de un turno extra, pero si lo haces tres veces seguidas la ultima ficha que moviste volvera a casa FALTA POR IMPLEMENTAR
 public class Tablero {
+
     private final int NUMJUGADORES = 4;
     private final int NUMFICHAS = 4;
     private final int NUMCASILLAS = 68;
@@ -120,17 +121,21 @@ public class Tablero {
     public int moverFicha(int numJugador, int numFicha, int tirada) {
         Ficha ficha = lFichas[numJugador][numFicha];
         int posInicial = ficha.getPosicion();
-        if(ficha.isAcabado()){
+        if (ficha.isAcabado()) {
             MainServidor.notificarJugador("La ficha ya ha acabado, no puedes moverla", numJugador);
             return 1;
-        }else if(ficha.isPosFinal()){
+        } else if (ficha.isPosFinal()) {
             ficha.AumentarCasillasRecorridasFinal(tirada);
             ficha.ComprobarAcabado();
-            if(ficha.isAcabado()){
-                MainServidor.notificarTodos("La ficha "+ ficha+ " ha llegado al final del tablero");
+            if (ficha.isAcabado()) {
+                MainServidor.notificarTodos("La ficha " + ficha + " ha llegado al final del tablero");
+            }
+            if (ficha.getPosicion() != 0) {//La quita de las casillas
+                tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);//Como va a entrar a la recta final quita de la lista de casillas
+                ficha.setPosicion(0);
             }
             return 0;
-        }else if (ficha.isFuera()) {//Caso general
+        } else if (ficha.isFuera()) {//Caso general
             for (int i = 0; i < tirada; i++) {
                 if (!comprobar1Mov(ficha)) {
                     ficha.setPosicion(ficha.getPosicion() + 1);
@@ -138,9 +143,11 @@ public class Tablero {
                     if (ficha.getPosicion() == 69) {//Que el tablero sea circular
                         ficha.setPosicion(1);
                     }
-                    if(ficha.DadoVuelta()){//Si esta en la casilla de anttes de entrar al final
+                    if (ficha.DadoVuelta()) {//Si esta en la casilla de antes de entrar al final
                         ficha.setPosFinal(true);
-                        return moverFicha(numJugador, numFicha, tirada-i-1);
+                        if(i+1<tirada){//Si no va a entrar en la recta se actualiza la casilla normal y la siguiente vez entrara  
+                            return moverFicha(numJugador, numFicha, tirada - i - 1);
+                        }
                     }
                 } else {
                     MainServidor.notificarJugador("Movimiento inválido. Elige otro movimiento.", numJugador);
@@ -160,11 +167,11 @@ public class Tablero {
             if (fichasCasilla.size() > 1 && fichasCasilla.get(0).color != fichasCasilla.get(1).color && !fichasCasilla.get(0).isSegura()) {
                 fichasCasilla.get(0).fichaComida();//Se le vueven a poner los valores por defecto
                 fichasCasilla.remove(0); //La ficha comida es la que estaba antes que la que acaba de llegar, asi que esta la primera en el array
-                int comer=moverFicha(numJugador, numFicha, 20);
-                if(comer==0){
-                    MainServidor.notificarTodos("La ficha "+lFichas[numJugador][numFicha]+" ha comida una ficha y ha avanzado 20 posiciones.");
-                }else{
-                    MainServidor.notificarTodos("La ficha "+lFichas[numJugador][numFicha]+" ha comida una ficha y ha intentado avanzar 20 posiciones, pero ha sido bloqueada.");
+                int comer = moverFicha(numJugador, numFicha, 20);
+                if (comer == 0) {
+                    MainServidor.notificarTodos("La ficha " + lFichas[numJugador][numFicha] + " ha comida una ficha y ha avanzado 20 posiciones.");
+                } else {
+                    MainServidor.notificarTodos("La ficha " + lFichas[numJugador][numFicha] + " ha comida una ficha y ha intentado avanzar 20 posiciones, pero ha sido bloqueada.");
                 }
             }
             return 0;
@@ -172,16 +179,22 @@ public class Tablero {
             if (tirada == 5) {
                 int casillaSalida;
                 switch (numJugador) {
-                    case 0 -> casillaSalida = 5;
-                    case 1 -> casillaSalida = 39;
-                    case 2 -> casillaSalida = 22;
-                    case 3 -> casillaSalida = 56;
-                    default -> {casillaSalida = 0;
+                    case 0 ->
+                        casillaSalida = 5;
+                    case 1 ->
+                        casillaSalida = 39;
+                    case 2 ->
+                        casillaSalida = 22;
+                    case 3 ->
+                        casillaSalida = 56;
+                    default -> {
+                        casillaSalida = 0;
                     }
-                }if(hayBarrera(casillaSalida)){
+                }
+                if (hayBarrera(casillaSalida)) {
                     MainServidor.notificarJugador("Movimiento invalido, la casilla de salida esta bloqueda.", numJugador);//la funcion ya la agrega a casillas
                     return 1;
-                }else{
+                } else {
                     agregarFichaATablero(numJugador, numFicha);
                     return 0;
                 }
@@ -200,26 +213,55 @@ public class Tablero {
         this.turnoJugador = turnoJugador;
     }
 
-    public void mostrarTablero() {//version provisional para comprobar las funciones
+    public String mostrarTablero() {//version provisional para comprobar las funciones
+        StringBuilder tab=new StringBuilder();
         for (int i = 1; i < 10; i++) {
-            System.out.print(i + " ,_");
+            tab.append(i + " ,_");
         }
         for (int i = 10; i < 69; i++) {
-            System.out.print(i + ",_");
+            tab.append(i + ",_");
         }
-        System.out.println("");
+        tab.append("/n");
         String space;
         for (int n = 0; n < NUMFICHAS; n++) {
             for (int c = 1; c < 68; c++) {
                 if (tablero.get(c) == null || tablero.get(c).isEmpty()) {
-                    System.out.print("  ,_");
+                    tab.append("  ,_");
                 } else {
-                    System.out.print(tablero.get(c).get(n) + ",_");
+                    tab.append(tablero.get(c).get(n) + ",_");
                 }
             }
-            System.out.println("");
+            tab.append("/n");
         }
-
+        tab.append("/n");
+        tab.append("Recta final roja: /n");
+        for(int i=0;i<NUMFICHAS;i++){
+            if(lFichas[0][i].isPosFinal()){
+                tab.append(lFichas[0][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
+            }
+        }
+        tab.append("/n");
+        tab.append("Recta final verde: /n");
+        for(int i=0;i<NUMFICHAS;i++){
+            if(lFichas[1][i].isPosFinal()){
+                tab.append(lFichas[1][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
+            }
+        }
+        tab.append("/n");
+        tab.append("Recta final amarillo: /n");
+        for(int i=0;i<NUMFICHAS;i++){
+            if(lFichas[2][i].isPosFinal()){
+                tab.append(lFichas[2][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
+            }
+        }
+        tab.append("/n");
+        tab.append("Recta final azul: /n");
+        for(int i=0;i<NUMFICHAS;i++){
+            if(lFichas[3][i].isPosFinal()){
+                tab.append(lFichas[3][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
+            }
+        }
+        return tab.toString();
     }
 
 }
