@@ -6,20 +6,20 @@ public class Ficha {
     private int casillasRecorridas;
     private int casillasRecorridasFinal;
     public ColorEnum color;
-    private boolean fuera;//Hace referencia ha esta afuera del principio 
-    private boolean acabado;//Señale si la ficha ha llegado al final
+    private boolean fuera=false;
+    private boolean acabado;
     private boolean segura=true;//si acaba de salir de casa y no puede ser comida
     private  boolean posFinal;
-    private static int r = 0;
     private static final int CASILLAS_RECORRER = 63;
     private static final int CASILLAS_FINAL = 8;
 
-    public Ficha(int numFicha, int posicion, int casillasRecorridas, ColorEnum color) {
+    public Ficha(int numFicha, int posicion, ColorEnum color) {
+        this.acabado = false;
         this.casillasRecorridasFinal = 0;
         this.posFinal = false;
         this.numFicha = numFicha;
         this.posicion = posicion;
-        this.casillasRecorridas = casillasRecorridas;
+        this.casillasRecorridas = 0;
         this.color = color;
     }
 
@@ -34,9 +34,6 @@ public class Ficha {
     public int getCasillasRecorridas() {
         return CASILLAS_RECORRER -casillasRecorridas;
     }
-    public ColorEnum getColor() {
-        return color;
-    }
 
     public boolean isFuera() {
         return fuera;
@@ -48,18 +45,6 @@ public class Ficha {
 
     public boolean isPosFinal() {
         return posFinal;
-    }
-
-    public static int getR() {
-        return r;
-    }
-
-    public static int getCASILLAS_RECORRER() {
-        return CASILLAS_RECORRER;
-    }
-
-    public static int getCASILLAS_FINAL() {
-        return CASILLAS_FINAL;
     }
 
     public void AumentarCasillasRecorridas() {
@@ -108,8 +93,10 @@ public class Ficha {
     public void fichaComida(){
         posicion=0;
         fuera=false;
-        casillasRecorridas=CASILLAS_RECORRER;
+        casillasRecorridas=0;
+        casillasRecorridasFinal=0;
         posFinal=false;
+        segura=false;
     }
 
     public boolean isSegura() {
@@ -146,13 +133,9 @@ public class Ficha {
         this.posFinal=posFinal;
     }
     public boolean DadoVuelta(){
-        if(casillasRecorridas==CASILLAS_RECORRER){
-            return true;
-        }else{
-            return false; 
-        }
+        return casillasRecorridas==CASILLAS_RECORRER;
     }
-
+    
     public int getCasillasRecorridasFinal() {
         return casillasRecorridasFinal;
     }
@@ -164,6 +147,10 @@ public class Ficha {
         if(casillasRecorridasFinal>=CASILLAS_FINAL){
             this.acabado=true;
         }
+    }
+
+    public void setFuera(boolean fuera) {
+        this.fuera = fuera;
     }
 }
 

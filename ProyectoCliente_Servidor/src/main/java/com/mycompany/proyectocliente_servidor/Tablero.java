@@ -27,7 +27,7 @@ public class Tablero {
         //Preparamos el tablero
         for (int j = 0; j < NUMJUGADORES; j++) {
             for (int f = 0; f < NUMFICHAS; f++) {
-                lFichas[j][f] = null;
+                lFichas[j][f] = new Ficha(f, 0, ColorEnum.values()[j]);
             }
         }
         this.tablero = new ArrayList<>(NUMCASILLAS);
@@ -49,29 +49,36 @@ public class Tablero {
             default -> {
             }
         }
+        lFichas[numJugador][numFicha].setFuera(true);
         tablero.get(lFichas[numJugador][numFicha].getPosicion()).add(lFichas[numJugador][numFicha]); //Pasamos la ficha de la lista al tablero
     }
 
     public void lanzarDado(int jugadorQueLanza) {
+        MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
+        System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
         MainServidor.notificarTodos("Se lanza el dado");
         int dado = (int) (Math.random() * 6 + 1);
         MainServidor.notificarTodos("Ha salido el numero " + dado);
         if (dado == 5) {
             MainServidor.notificarJugador("Has sacado un cinco, si selecionas una ficha que este en tu casa saldra al tablero", jugadorQueLanza);
         }
-        MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
-        System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
+        
         for (int j = 0; j < NUMJUGADORES; j++) {//Parte tablero prov    
             System.out.println(ColorEnum.values()[j] + ":");
             MainServidor.notificarTodos(ColorEnum.values()[j] + ":");
             for (int i = 0; i < lFichas[j].length; i++) {
                 if (lFichas[j][i] != null && lFichas[j][i].getPosicion() != 0) {
-                    MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
+                    if(lFichas[j][i].isPosFinal()){
+                          MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Recta final  " +  (8-lFichas[j][i].getCasillasRecorridasFinal())+" para terminar");
+                    }else{
+                        MainServidor.notificarTodos("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
+                    }
                     System.out.println("Ficha " + lFichas[j][i].getNumFicha() + ": Casilla " + lFichas[j][i].getPosicion());
                 }
 
             }
         }
+       // MainServidor.notificarTodos(mostrarTablero());
         int codigo;
         int contador = 0;
         do {
@@ -91,6 +98,9 @@ public class Tablero {
                     MainServidor.notificarJugador("No puedes mover la ficha escogida, por favor selecione otra. ", jugadorQueLanza);
                     contador = contador + 1;
                 }
+            } else if (ficha == 5) {
+                codigo = 0;
+                MainServidor.notificarJugador("Tu turno ha finalizado", jugadorQueLanza);
             } else {
                 MainServidor.notificarJugador("No has seleccionado una ficha valida", jugadorQueLanza);
                 codigo = 1;
@@ -145,7 +155,7 @@ public class Tablero {
                     }
                     if (ficha.DadoVuelta()) {//Si esta en la casilla de antes de entrar al final
                         ficha.setPosFinal(true);
-                        if(i+1<tirada){//Si no va a entrar en la recta se actualiza la casilla normal y la siguiente vez entrara  
+                        if (i + 1 < tirada) {//Si no va a entrar en la recta se actualiza la casilla normal y la siguiente vez entrara  
                             return moverFicha(numJugador, numFicha, tirada - i - 1);
                         }
                     }
@@ -213,65 +223,15 @@ public class Tablero {
         this.turnoJugador = turnoJugador;
     }
 
-    public String mostrarTablero() {//version provisional para comprobar las funciones
-        StringBuilder tab=new StringBuilder();
-        for (int i = 1; i < 10; i++) {
-            tab.append(i + " ,_");
-        }
-        for (int i = 10; i < 69; i++) {
-            tab.append(i + ",_");
-        }
-        tab.append("/n");
-        String space;
-        for (int n = 0; n < NUMFICHAS; n++) {
-            for (int c = 1; c < 68; c++) {
-                if (tablero.get(c) == null || tablero.get(c).isEmpty()) {
-                    tab.append("  ,_");
-                } else {
-                    tab.append(tablero.get(c).get(n) + ",_");
+    public int PartidaAcabada() {
+        int contador = 0;
+        for (int i = 0; i < NUMJUGADORES; i++) {
+            for (int j = 0; j < NUMFICHAS; j++) {
+                if (lFichas[i][j].isAcabado()) {
+                    contador = contador + 1;
                 }
             }
-            tab.append("/n");
-        }
-        tab.append("/n");
-        tab.append("Recta final roja: /n");
-        for(int i=0;i<NUMFICHAS;i++){
-            if(lFichas[0][i].isPosFinal()){
-                tab.append(lFichas[0][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
-            }
-        }
-        tab.append("/n");
-        tab.append("Recta final verde: /n");
-        for(int i=0;i<NUMFICHAS;i++){
-            if(lFichas[1][i].isPosFinal()){
-                tab.append(lFichas[1][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
-            }
-        }
-        tab.append("/n");
-        tab.append("Recta final amarillo: /n");
-        for(int i=0;i<NUMFICHAS;i++){
-            if(lFichas[2][i].isPosFinal()){
-                tab.append(lFichas[2][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
-            }
-        }
-        tab.append("/n");
-        tab.append("Recta final azul: /n");
-        for(int i=0;i<NUMFICHAS;i++){
-            if(lFichas[3][i].isPosFinal()){
-                tab.append(lFichas[3][i]+" ha recorrido: "+lFichas[0][i].getCasillasRecorridasFinal()+" del final /n");
-            }
-        }
-        return tab.toString();
-    }
-    public int PartidaAcabada(){
-        int contador=0;
-        for(int i=0;i<NUMJUGADORES;i++){
-            for(int j=0;j<NUMFICHAS;j++){
-                if(lFichas[i][j].isAcabado()){
-                    contador=contador+1;
-                }
-            }
-            if(contador==4){
+            if (contador == 4) {
                 return i;
             }
         }
