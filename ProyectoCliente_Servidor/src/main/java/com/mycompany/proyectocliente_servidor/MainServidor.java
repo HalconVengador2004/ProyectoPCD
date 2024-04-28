@@ -49,12 +49,14 @@ public class MainServidor {
             }
             Tablero tablero = new Tablero(jugadores);
             int jugadorInicial = 0;
+            int dado;
             while (true) {
                 System.out.println("Turno de Jugador " + ColorEnum.values()[jugadorInicial]);
-                tablero.lanzarDado(jugadorInicial);
-                tablero.setTurnoJugador(jugadorInicial);
-                jugadorInicial = (jugadorInicial + 1) % 4;
-
+                dado = tablero.lanzarDado(jugadorInicial);
+                if (dado != 6){
+                    tablero.setTurnoJugador(jugadorInicial);
+                    jugadorInicial = (jugadorInicial + 1) % 4;
+                }
             }
 
         } catch (IOException e) {

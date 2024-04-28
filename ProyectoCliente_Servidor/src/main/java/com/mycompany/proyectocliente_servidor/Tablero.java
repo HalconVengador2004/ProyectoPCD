@@ -53,7 +53,7 @@ public class Tablero {
         tablero.get(lFichas[numJugador][numFicha].getPosicion()).add(lFichas[numJugador][numFicha]); //Pasamos la ficha de la lista al tablero
     }
 
-    public void lanzarDado(int jugadorQueLanza) {
+    public int lanzarDado(int jugadorQueLanza) {
         MainServidor.notificarTodos("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
         System.out.println("---TURNO DE " + ColorEnum.values()[jugadorQueLanza] + "---");
         MainServidor.notificarTodos("Se lanza el dado");
@@ -110,6 +110,7 @@ public class Tablero {
                 codigo = 0;
             }
         } while (codigo == 1); //Como no es valido, no pasamos el turno sino que le dejamos volver a elegir
+        return dado;
     }
 
     public boolean hayBarrera(int numCasilla) {
