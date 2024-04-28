@@ -49,13 +49,24 @@ public class MainServidor {
             }
             Tablero tablero = new Tablero(jugadores);
             int jugadorInicial = 0;
-            int dado;
+            int dado, contadorSeisesSeguidos = 0;
             while (true) {
                 System.out.println("Turno de Jugador " + ColorEnum.values()[jugadorInicial]);
                 dado = tablero.lanzarDado(jugadorInicial);
                 if (dado != 6){
                     tablero.setTurnoJugador(jugadorInicial);
                     jugadorInicial = (jugadorInicial + 1) % 4;
+                    contadorSeisesSeguidos = 0;
+                } else {
+                    contadorSeisesSeguidos++;
+                    if (contadorSeisesSeguidos == 3){
+                        if (tablero.getUltimaFichaMovida() != null){
+                            tablero.getUltimaFichaMovida().fichaComida();
+                        }
+                        contadorSeisesSeguidos = 0;
+                        tablero.setTurnoJugador(jugadorInicial);
+                        jugadorInicial = (jugadorInicial + 1) % 4;
+                    }
                 }
             }
 

@@ -21,6 +21,7 @@ public class Tablero {
     private int turnoJugador = 0; //Debe ser (mod 4). Para esto falta por ver cuando acaba el turno de un jugador
     private Jugador[] lJugadores = new Jugador[4];
     private ArrayList<ArrayList<Ficha>> tablero; // En cada casilla puede haber hasta dos fichas
+    private Ficha ultimaFichaMovida;
 
     public Tablero(Jugador[] lJugadores) {
         this.lJugadores = lJugadores;
@@ -166,6 +167,7 @@ public class Tablero {
                     return 1;
                 }
             }
+            ultimaFichaMovida = ficha;
             //Actualizamos la posicion de la ficha en el tablero una vez se ha movido
             tablero.get(ficha.getPosicion()).add(ficha);
             tablero.get(posInicial).remove(tablero.get(posInicial).size() - 1);
@@ -224,6 +226,14 @@ public class Tablero {
         this.turnoJugador = turnoJugador;
     }
 
+    public Ficha getUltimaFichaMovida() {
+        return ultimaFichaMovida;
+    }
+
+    public void setUltimaFichaMovida(Ficha ultimaFichaMovida) {
+        this.ultimaFichaMovida = ultimaFichaMovida;
+    }
+    
     public int PartidaAcabada() {
         int contador = 0;
         for (int i = 0; i < NUMJUGADORES; i++) {
