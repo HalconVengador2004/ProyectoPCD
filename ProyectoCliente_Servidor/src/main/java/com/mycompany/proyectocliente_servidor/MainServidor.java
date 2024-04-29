@@ -73,7 +73,11 @@ public class MainServidor {
             }
             notificarTodos("-------------------------------------------------- \n");
             notificarTodos("Partida acabada, ha ganado el jugador de color: "+ColorEnum.values()[jugadorGanador]);
-
+            for(int i=0;i<NUMJUGADORES;i++){
+                socketJugadores.get(i).close();
+                printWriterJugadores.get(i).close();
+                bufferedReaderJugadores.get(i).close();
+            }
         } catch (IOException e) {
             System.err.println("Capturada InterruptedException. Mensaje: " + e.getMessage());
             e.printStackTrace(System.out);
