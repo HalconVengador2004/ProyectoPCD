@@ -33,7 +33,7 @@ public class MainServidor {
                 Socket jugador = serverSocket.accept();
                 socketJugadores.add(jugador);
 
-                //Notificamos al jugador de que está conectado al servidor y le informamos del color que le ha tocado
+                //Notificamos al jugador de que está conectado al servidor
                 printWriterJugadores.add(new PrintWriter(jugador.getOutputStream(), true));
                 bufferedReaderJugadores.add(new BufferedReader(new InputStreamReader(jugador.getInputStream())));
                 System.out.println("Jugadores conectados: " + socketJugadores.size());

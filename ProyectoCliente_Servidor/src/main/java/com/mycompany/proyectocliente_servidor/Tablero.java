@@ -1,16 +1,8 @@
 package com.mycompany.proyectocliente_servidor;
-//Reglas:
-//Si comes una ficha la ficha comida volvera a casa y el jugador que mueve puede mover 20 una de sus fichas
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-//Es necesario sacar un 5 para salir de casa
-//Dos fichas del mismo color en la misma casilla forma un bloqueo
-//En el momento que decidas mover una ficha se movera dicha ficha hasta donde pueda, esto quiere decir que si eliges una ficha con un bloqueo justo delante no avanzara nada
-//Si intentas sacar una ficha de casa que no puede ser sacada no se movera y perderas el turno
-//Sacar un seis de un turno extra, pero si lo haces tres veces seguidas la ultima ficha que moviste volvera a casa FALTA POR IMPLEMENTAR
 public class Tablero {
 
     private final int NUMJUGADORES = 4;
@@ -64,7 +56,7 @@ public class Tablero {
             MainServidor.notificarJugador("Has sacado un cinco, si selecionas una ficha que este en tu casa saldra al tablero", jugadorQueLanza);
         }
         
-        for (int j = 0; j < NUMJUGADORES; j++) {//Parte tablero prov    
+        for (int j = 0; j < NUMJUGADORES; j++) {    
             System.out.println(ColorEnum.values()[j] + ":");
             MainServidor.notificarTodos(ColorEnum.values()[j] + ":");
             for (int i = 0; i < lFichas[j].length; i++) {
@@ -79,7 +71,6 @@ public class Tablero {
 
             }
         }
-       // MainServidor.notificarTodos(mostrarTablero());
         int codigo;
         int contador = 0;
         do {
@@ -119,7 +110,7 @@ public class Tablero {
     }
 
     public boolean comprobar1Mov(Ficha ficha) {
-        // (SERGIO ) Cuando haces un movimiento, puede que adelante tengas una barrera,
+        //Cuando haces un movimiento, puede que adelante tengas una barrera,
         //Se va comprobando en cada casilla si la siguiente tiene barrera, de manera que si se llega a una
         //Se pierde el turno y se vuelve a la casilla inicial
         int casillaSig = ficha.getPosicion() + 1;
@@ -127,7 +118,6 @@ public class Tablero {
             casillaSig = 1;
         }
         return hayBarrera(casillaSig);//Comprueba si hay barrera 
-        //Otro caso posible entra en la recta final se puede bloquear a si mismo?
     }
 
     public int moverFicha(int numJugador, int numFicha, int tirada) {
@@ -218,11 +208,11 @@ public class Tablero {
         }
     }
 
-    public int getTurnoJugador() { //(SERGIO) Devuelve el turno del jugador al que le toca (MODULO 4)
+    public int getTurnoJugador() { //Devuelve el turno del jugador al que le toca 
         return turnoJugador;
     }
 
-    public void setTurnoJugador(int turnoJugador) { //(SERGIO) Se modifica el turno del jugador al que le toca (MODULO 4)
+    public void setTurnoJugador(int turnoJugador) { //Se modifica el turno del jugador al que le toca
         this.turnoJugador = turnoJugador;
     }
 
