@@ -50,7 +50,8 @@ public class MainServidor {
             Tablero tablero = new Tablero(jugadores);
             int jugadorInicial = 0;
             int dado, contadorSeisesSeguidos = 0;
-            while (true) {
+            int jugadorGanador=5;
+            while (jugadorGanador==5) {
                 System.out.println("Turno de Jugador " + ColorEnum.values()[jugadorInicial]);
                 dado = tablero.lanzarDado(jugadorInicial);
                 if (dado != 6){
@@ -68,7 +69,10 @@ public class MainServidor {
                         jugadorInicial = (jugadorInicial + 1) % 4;
                     }
                 }
+                jugadorGanador=tablero.PartidaAcabada();
             }
+            notificarTodos("-------------------------------------------------- \n");
+            notificarTodos("Partida acabada, ha ganado el jugador de color: "+ColorEnum.values()[jugadorGanador]);
 
         } catch (IOException e) {
             System.err.println("Capturada InterruptedException. Mensaje: " + e.getMessage());
