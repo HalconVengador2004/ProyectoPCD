@@ -28,7 +28,6 @@ public class MainJugador {
             BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             Scanner scanner = new Scanner(System.in);
             while (!partidaAcabada) {
-                //Falta actualizar cuando acaba
                 String mensaje = br.readLine();
                 System.out.println(mensaje);
                 if ("¿Que ficha quieres mover?".equals(mensaje)) {
@@ -36,7 +35,6 @@ public class MainJugador {
                     pw.println(input);
                 }
             }
-            //Cerrar despues de trabajar con el socket
         } catch (IOException e) {
             System.err.println("Capturada InterruptedException. Mensaje: " + e.getMessage());
             System.exit(1);
