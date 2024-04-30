@@ -10,14 +10,23 @@ Para comenzar el juego:
 -A cada jugador se le asignará un color al conectarse al servidor
 - Una vez haya 4 jugadores conectados, el juego comenzará automaticamente
 
+
+
+
 -Como en el parchís tradicional, si no sacas un 5 no puedes sacar una ficha al tablero.
 -Si es tu turno, NO has sacado un 5 en el dado y no tienes ninguna ficha fuera, debes introducir un 5, para saltar tu turno
 si no introduces el "5", el servidor pedirá al usuario 3 veces una opcion válida, después perderá su turno
 
+-Si es tu turno, has sacado un 5 y tienes alguna ficha en el tablero, podrás elegir entre mover una ficha ya en juego
+o sacar una nueva al tablero
+
+-Si es tu turno, has sacado un 5 y no tienes ninguna ficha en el tablero, podrás elegir que ficha sacar
+introduciendo por teclado un numero entre 0 y 4 (incluidos)
+
 
 -Si no tienes ninguna ficha fuera, pero tienes un 6 en el dado, podrás volver a lanzar el dado
-- Es decir, si sacas un 6 en las condiciones anteriores, deberas escribir por pantalla "5" y el jugador
-volverá a tirar el dado
+- Es decir, si sacas un 6 en las condiciones anteriores, deberas escribir por pantalla "5" ,para saltar tu turno, y el jugador
+podrá volver a tirar el dado
 
 
 -Si un jugador va a mover una ficha y tiene una barrera cerca, impidiendole recorrer casillas,
