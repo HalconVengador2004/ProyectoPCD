@@ -2,18 +2,18 @@
 
 public class Ficha {
     private int numFicha;
-    private int posicion;//Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
+    private int posicion; //Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
     private int casillasRecorridas;
     private int casillasRecorridasFinal;
     public ColorEnum color;
     private boolean fuera=false;
     private boolean acabado;
-    private boolean segura=true;//si acaba de salir de casa y no puede ser comida
+    private boolean segura=true; //Si acaba de salir de casa y no puede ser comida
     private  boolean posFinal;
     private static final int CASILLAS_RECORRER = 63;
     private static final int CASILLAS_FINAL = 8;
 
-    public Ficha(int numFicha, int posicion, ColorEnum color) {
+    public Ficha(int numFicha, int posicion, ColorEnum color) { //Constructor de Ficha
         this.acabado = false;
         this.casillasRecorridasFinal = 0;
         this.posFinal = false;

@@ -10,9 +10,9 @@ public class Tablero {
     private final int NUMCASILLAS = 68;
     private Ficha[][] lFichas = new Ficha[NUMJUGADORES][NUMFICHAS];
     private boolean[] casillas = new boolean[68];
-    private int turnoJugador = 0; //Debe ser (mod 4). Para esto falta por ver cuando acaba el turno de un jugador
+    private int turnoJugador = 0;  //Debe ser (modulo 4). Para esto falta por ver cuando acaba el turno de un jugador
     private Jugador[] lJugadores = new Jugador[4];
-    private ArrayList<ArrayList<Ficha>> tablero; // En cada casilla puede haber hasta dos fichas
+    private ArrayList<ArrayList<Ficha>> tablero; // En cada casilla puede haber dos fichas COMO MAXIMO
     private Ficha ultimaFichaMovida;
 
     public Tablero(Jugador[] lJugadores) {

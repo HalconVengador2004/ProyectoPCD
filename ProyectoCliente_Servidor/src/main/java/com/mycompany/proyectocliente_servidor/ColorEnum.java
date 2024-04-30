@@ -8,7 +8,7 @@ package com.mycompany.proyectocliente_servidor;
  *
  * @author alumno
  */
-public enum ColorEnum {
+public enum ColorEnum { //ENUM utilizado para definir el color de los jugadores
     ROJO,
     VERDE,
     AMARILLO,

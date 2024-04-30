@@ -16,6 +16,8 @@ si no introduces el "5", el servidor pedirá al usuario 3 veces una opcion váli
 
 
 -Si no tienes ninguna ficha fuera, pero tienes un 6 en el dado, podrás volver a lanzar el dado
+- Es decir, si sacas un 6 en las condiciones anteriores, deberas escribir por pantalla "5" y el jugador
+volverá a tirar el dado
 
 
 -Si un jugador va a mover una ficha y tiene una barrera cerca, impidiendole recorrer casillas,
