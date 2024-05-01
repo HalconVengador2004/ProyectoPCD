@@ -2,7 +2,7 @@
 
 public class Ficha {
     private int numFicha;
-    private int posicion; //Les asignaremos la posicion 100 a las fichas que se hayan comido y vuelto a casa
+    private int posicion; //Les asignaremos la posicion 0 a las fichas que se hayan comido y vuelto a casa
     private int casillasRecorridas;
     private int casillasRecorridasFinal;
     public ColorEnum color;
