@@ -29,10 +29,15 @@ public class MainJugador {
             Scanner scanner = new Scanner(System.in);
             while (!partidaAcabada) {
                 String mensaje = br.readLine();
-                System.out.println(mensaje);
-                if ("¿Que ficha quieres mover?".equals(mensaje)) {
-                    String input = scanner.next();
-                    pw.println(input);
+                if (mensaje == null){
+                    System.out.println("El servidor ha sido apagado");
+                    partidaAcabada = true;
+                } else {
+                    System.out.println(mensaje);
+                    if ("¿Que ficha quieres mover?".equals(mensaje)) {
+                        String input = scanner.next();
+                        pw.println(input);
+                    }
                 }
             }
         } catch (IOException e) {
